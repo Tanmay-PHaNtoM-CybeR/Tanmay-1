@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: tripgenius-ai
+    runtime: static
+    buildCommand: npm ci --include=dev && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20.19.0
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      # The app is a single-page application: send every path to index.html so
+      # a refresh or a shared link never hits a Render "not found" page.
+      - type: rewrite
+        source: /*
+        destination: /index.html

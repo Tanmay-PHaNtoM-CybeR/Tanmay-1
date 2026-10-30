@@ -93,7 +93,42 @@ Open Command Prompt in this folder and run:
   npm run test
   npm run build
 
-These run the included planning-rule tests and create a production build.
+These run the included planning-rule tests and create a production build. The
+build output in dist/ is exactly what Render publishes.
+
+DEPLOYING ON RENDER
+-------------------
+
+TripGenius AI is a static front-end build (Vite + React), so it deploys on
+Render as a Static Site. There is no server, database, or API key to configure.
+
+Option 1 - Blueprint (recommended):
+
+1. Push this folder to a GitHub/GitLab repository.
+2. In Render, choose New > Blueprint and select that repository.
+3. Render reads render.yaml and creates the site automatically. Every push to
+the tracked branch rebuilds and republishes it.
+
+Option 2 - Manual Static Site:
+
+1. In Render, choose New > Static Site and connect the repository.
+2. Build Command:  npm ci --include=dev && npm run build
+3. Publish Directory:  dist
+4. Add an environment variable NODE_VERSION = 20.19.0 (Vite 4 works on Node 20).
+5. Add a Rewrite rule: Source /*  ->  Destination /index.html
+
+render.yaml already sets the build command, publish directory, Node version,
+long-lived caching for hashed asset files, and the single-page-app rewrite.
+
+Notes for the deployed (public) version:
+
+• Saved trips, expenses and the packing checklist live in the visitor's own
+  browser storage. They are not stored on Render and are not shared between
+  visitors or devices.
+• Each visitor's data is private to their browser, so no accounts or privacy
+  policy setup is needed for it.
+• Sample flight, hotel and train data is still illustrative and unchanged by
+  deployment; live verification links still point to external providers.
 
 TROUBLESHOOTING
 ---------------
